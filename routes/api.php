@@ -17,3 +17,8 @@ Route::namespace('Api')->group(function(){
 
     Route::resource('user', 'UserController');
 });
+
+Route::namespace('Api')->group(function(){
+
+    Route::resource('category', 'CategoryController');
+});

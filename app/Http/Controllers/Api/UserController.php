@@ -27,7 +27,7 @@ class UserController extends Controller
         try{
             $this->user = $this->user->findOrFail($id);
             return response()->json([
-                'dados' => $this->user
+                'data' => $this->user
             ], 200);
         }catch(\Exception $e){
             $messege = new ApiMessages($this->user);
