@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RealStateRequest;
+use App\Messagens\ApiMessages;
 use App\RealState;
 use Illuminate\Http\Request;
 
@@ -30,23 +32,21 @@ class RealStateController extends Controller
                 'dados' => $realState 
             ], 200);
         }catch(\Exception $e){
-            return response()->json([
-                'Error' => $e->getMessage()
-            ], 401);
+            $message = new ApiMessages($e->getMessage());
+            return response()->json($message->getMessage(), 401);
         }
     }
 
-    public function store(Request $request)
+    public function store(RealStateRequest $request)
     {
         try{
-            $realState = $this->realState->create($request->all());
+            $this->realState->create($request->all());
             return response()->json([
                 'msg' => 'Imóvel cadastrado com sucesso' 
             ], 200);
         }catch(\Exception $e){
-            return response()->json([
-                'Error' => $e->getMessage()
-            ], 401);
+            $message = new ApiMessages($e->getMessage());
+            return response()->json($message->getMessage(), 401);
         }
     }
 
@@ -56,16 +56,15 @@ class RealStateController extends Controller
 
         try{
             $realState = $this->realState->findOrFail($id);
-            $realState->update($request->all());
+            $realState->update($data);
             return response()->json([
                 'msg' => 'Imóvel atualizado com sucesso',
                 'dados' => $realState,
                 'data' => $data
             ], 200);
         }catch(\Exception $e){
-            return response()->json([
-                'Error' => $e->getMessage()
-            ], 401);
+            $message = new ApiMessages($e->getMessage());
+            return response()->json($message->getMessage(), 401);
         }
     }
 
@@ -78,9 +77,8 @@ class RealStateController extends Controller
                 'msg' => 'Imóvel deletado com sucesso'
             ], 200);
         }catch(\Exception $e){
-            return response()->json([
-                'Error' => $e->getMessage()
-            ], 401);
+            $message = new ApiMessages($e->getMessage());
+            return response()->json($message->getMessage(), 401);
         }
     }
     

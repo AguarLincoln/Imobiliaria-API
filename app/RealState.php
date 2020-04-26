@@ -8,7 +8,7 @@ class RealState extends Model
 {
 
     protected $fillable = [
-        'title', 'price', 'bathorooms', 'bedrooms',
+        'title', 'price', 'bathrooms', 'bedrooms',
         'classification', 'total_area', 'description',
         'slug', 'about', 'user_id'
     ];
