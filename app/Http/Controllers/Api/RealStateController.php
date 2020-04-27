@@ -39,9 +39,15 @@ class RealStateController extends Controller
 
     public function store(RealStateRequest $request)
     {
+        $data = $request->all();
+
         try{
-            $this->realState->create($request->all());
-            return response()->json([
+            $realState = $this->realState->create($data);
+
+            if(isset($data['realState']) && count($data))
+                $realState()->categories()->sync($data['categories']);
+            
+                return response()->json([
                 'msg' => 'Imóvel cadastrado com sucesso' 
             ], 200);
         }catch(\Exception $e){
@@ -50,7 +56,7 @@ class RealStateController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(RealStateRequest $request, $id)
     {
         $data = $request->all();
 

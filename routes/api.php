@@ -22,3 +22,4 @@ Route::namespace('Api')->group(function(){
 
     Route::resource('category', 'CategoryController');
 });
+

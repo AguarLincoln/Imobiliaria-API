@@ -39,8 +39,9 @@ class CategoryController extends Controller
         $data = $request->all();
    
         try{
-            $this->category->create($data);
-            return response()->json([
+            
+            $category = $this->category->create($data);
+                return response()->json([
                 'msg' => 'Categoria adicionada com sucesso'
             ]);
         }catch(\Exception $e){
@@ -75,13 +76,13 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, $id)
     {
         $data = $request->all();
-        var_dump($id);
+       
         try{
-            $this->category = $this->category->findOrFail($id);
-            $this->category->update($data);
+            $category = $this->category->findOrFail($id);
+			$category->update($data);
             return response()->json([
                 'msg' => 'Categoria atualizada com sucesso'
             ]);
