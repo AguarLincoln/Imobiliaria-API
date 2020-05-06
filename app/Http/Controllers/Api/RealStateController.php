@@ -44,7 +44,7 @@ class RealStateController extends Controller
         try{
             $realState = $this->realState->create($data);
 
-            if(isset($data['realState']) && count($data))
+            if(isset($data['realState']) && count($data['categories']))
                 $realState()->categories()->sync($data['categories']);
             
                 return response()->json([
@@ -63,6 +63,10 @@ class RealStateController extends Controller
         try{
             $realState = $this->realState->findOrFail($id);
             $realState->update($data);
+
+            if(isset($data['realState']) && count($data['categories']))
+                $realState()->categories()->sync($data['categories']);
+            
             return response()->json([
                 'msg' => 'Imóvel atualizado com sucesso',
                 'dados' => $realState,

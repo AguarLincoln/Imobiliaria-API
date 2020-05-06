@@ -19,7 +19,7 @@ Route::namespace('Api')->group(function(){
 });
 
 Route::namespace('Api')->group(function(){
-
+    Route::get('category/{id}/real-state', 'CategoryController@realState');
     Route::resource('category', 'CategoryController');
 });
 
