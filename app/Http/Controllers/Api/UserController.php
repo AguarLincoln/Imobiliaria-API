@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Messagens\ApiMessages;
 use App\User;
+use Illuminate\Mail\Message;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -25,9 +27,11 @@ class UserController extends Controller
     public function show($id)
     {
         try{
-            $this->user = $this->user->findOrFail($id);
+            $user = $this->user->with('profile')->findOrFail($id);
+            //$user->profile->social_networks = unserialize($user->profile->social_networks);
+            
             return response()->json([
-                'data' => $this->user
+                'data' => $user
             ], 200);
         }catch(\Exception $e){
             $messege = new ApiMessages($this->user);
@@ -36,10 +40,31 @@ class UserController extends Controller
     }
 
     public function store(UserRequest $request){
+        
         $data = $request->all();
+        
+        if(!$request->has('password') || !$request->get('password')){
+            $data['password'] = bcrypt($data['password']);
+            $message = new ApiMessages('É necessario digitar uma senha pro usuario...');
+            return response()->json($message->getMessage(), 401);
+        }
+
+        Validator::make($data, [
+            'phone' => 'required',
+            'social_networks'=> 'required'
+        ])->validate();
 
         try{
-            $this->user->create($data);
+
+            $data['password'] = bcrypt($data['password']);
+            
+            $user = $this->user->create($data);
+            $user->profile()->create([
+                'phone' => $data['phone'],
+                'social_networks' => $data['social_networks'],
+
+            ]);
+            $user->profile->social_network = serialize($user->profile->social_network);
             return response()->json([
                 'msg' => 'Criado com sucesso'
             ], 200);
@@ -51,16 +76,26 @@ class UserController extends Controller
     }
     public function update(UserRequest $request, $id)
     {
+        dd($request);
         $data = $request->all();
-        if(!$request->has('password') || $request->get('password')){
+        if(!$request->has('password') || !$request->get('password')){
             $data['password'] = bcrypt($data['password']);
         }else{
             unset($data['password']);
         }
         
+        Validator::make($data, [
+            'profile.phone' => 'required',
+            'profile.social_networks'=> 'required'
+        ])->validate();
+
         try{
-            $this->user = $this->findOrFail($id);
-            $this->user->update($request->all());
+            $profile = $data['profile'];
+            $profile['social_networks'] = serialize($profile['social_networks']);
+            $user = $this->user->findOrFail($id);
+            $user->update($request->all());
+
+            $user->profile()->update($profile);
             return response()->json([
                 'msg' => 'Update realizado com sucesso'
             ], 200);

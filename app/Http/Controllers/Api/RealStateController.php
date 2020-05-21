@@ -19,14 +19,14 @@ class RealStateController extends Controller
 
     public function index()
     {
-        $this->realState = $this->realState->paginate(10);
-        return response($this->realState, 200);
+        $realState = auth('api')->user()->real_state()->paginate(10);
+        return response($realState, 200);
     }
 
     public function show($id)
     {
         try{
-            $realState = $this->realState->findOrFail($id);
+            $realState = auth('api')->user()->real_state()->findOrFail($id);
             return response()->json([
                 'msg' => 'Imóvel mostrado com sucesso',
                 'dados' => $realState 
@@ -40,8 +40,9 @@ class RealStateController extends Controller
     public function store(RealStateRequest $request)
     {
         $data = $request->all();
-
+        
         try{
+            $data['user_id'] = auth('api')->user()->id;
             $realState = $this->realState->create($data);
 
             if(isset($data['realState']) && count($data['categories']))
@@ -61,7 +62,7 @@ class RealStateController extends Controller
         $data = $request->all();
 
         try{
-            $realState = $this->realState->findOrFail($id);
+            $realState = auth('api')->user()->real_state()->findOrFail($id);
             $realState->update($data);
 
             if(isset($data['realState']) && count($data['categories']))
@@ -81,7 +82,7 @@ class RealStateController extends Controller
     public function destroy($id)
     {
         try{
-            $realState = $this->realState->findOrFail($id);
+            $realState = auth('api')->user()->real_state()->findOrFail($id);
             $realState->delete();
             return response()->json([
                 'msg' => 'Imóvel deletado com sucesso'
