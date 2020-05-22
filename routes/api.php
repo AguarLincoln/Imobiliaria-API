@@ -13,6 +13,7 @@ Route::namespace('Api')->group(function(){
     Route::get('/logout','Auth\\LoginJWTController@logout')->name('logout');
     Route::get('/refresh','Auth\\LoginJWTController@refresh')->name('refresh');
     Route::post('/cadastro', 'UserController@store')->name('cadastro.usuario');
+    Route::get('/search', 'RealStateSearchController@index')->name('search');
 });
 
 
