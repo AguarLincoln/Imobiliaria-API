@@ -9,6 +9,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 //Rotas gerais
 Route::namespace('Api')->group(function(){
+    Route::resource('/up','ThemesController');
     Route::post('/login','Auth\\LoginJWTController@login')->name('login');
     Route::get('/logout','Auth\\LoginJWTController@logout')->name('logout');
     Route::get('/refresh','Auth\\LoginJWTController@refresh')->name('refresh');
