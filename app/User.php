@@ -48,6 +48,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+    
     public function real_state()
     {
         return $this->hasMany(RealState::class);

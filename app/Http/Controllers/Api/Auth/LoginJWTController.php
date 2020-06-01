@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Validator;
 class LoginJWTController extends Controller
 {
     public function login(Request $request)
-    {
+    {   
+        $t = auth()->guard();
+        dd($t);
         $credentials = $request->only(['email', 'password']);
         
         Validator::make($credentials,[
