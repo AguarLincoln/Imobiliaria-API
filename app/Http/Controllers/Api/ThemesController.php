@@ -22,18 +22,7 @@ class ThemesController extends Controller
      */
     public function index(Request $request)
     {
-        
-        $searchQuery = EloquentBuilder::to(
-            Theme::class,
-            $request->except(['page', 'sort', 'direction'])
-        );
-    
-        $search = $searchQuery
-            ->sortable('title')
-            ->paginate(10)
-            ->appends($request->all());
-
-        return view('themes.index', compact('search'));
+        //
     }
 
     /**
@@ -93,12 +82,7 @@ class ThemesController extends Controller
      */
     public function show($id)
     {
-        $theme = Theme::where('id', $theme)->firstOrFail();
-        return response()->json([
-            'msg' => 'sucess',
-            'data' => $theme
-        ]);
-        //return view('themes.show', compact('theme'));
+        //
     }
 
     /**
